@@ -1,8 +1,5 @@
 # DAIS 2025 GenAI Hackathon
 
-
-
-
 ## 1. Set Up Your Workspace and Get Data
 
 ### Setting up your Workspace

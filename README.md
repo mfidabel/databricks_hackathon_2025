@@ -1,5 +1,8 @@
 # DAIS 2025 GenAI Hackathon
 
+
+
+
 ## 1. Set Up Your Workspace and Get Data
 
 ### Setting up your Workspace
@@ -27,20 +30,22 @@ We will show two different approaches to accomplishing these steps. The first us
 
 1. **Click the "SQL Editor" tab in the left sidebar of your Databricks workspace.**
 
-2. **Click "+" and "Create new query" to create a new SQL query.**
+Then click the "+" button to create a new query and select "Create new query."
 
-3. **Paste the following SQL code into the query editor:**
+![SQL Editor](./images/9_sql.png)
+
+2. **Paste the following SQL code into the query editor:**
 
 ```sql
 GRANT USE PROVIDER ON METASTORE TO `account users`;
 SELECT CURRENT_METASTORE();
 ```
 
-and then click the "Run" button (the arrow icon).
+and then click the "Run" button (the arrow icon). In the results section, copy the `current_metastore()` value. It will look like `<cloud>:<region>:<uuid>` (e.g. `aws:us-west-2:19a84bee-54bc-43a2-87de-023d0ec16016`)
 
-In the results section, copy the `current_metastore()` value.
+![Run Query](./images/10_run_query.png)
 
-Share this value with the hackathon organizers via the provided Google form.
+Share this value with the hackathon organizers via the provided Google form. The organizers will then share the data to your Databricks account. You can find it in the Delta Sharing section of your workspace's Catalog Explorer. See the [Accessing the Data](#accessing-the-data) section for more details.
 
 #### Option 2: Using the Databricks UI
 
@@ -79,6 +84,8 @@ Once you have been granted `USE PROVIDER` privileges, you can obtain your Delta 
 ![Copy Sharing Identifier](./images/6_copy_sharing_id.png)
 
 3. Share your Delta Sharing ID with the hackathon organizers using the provided Google form.
+
+### Accessing the Data
 
 After we have received your Delta Sharing ID, we will share the data to your Databricks account. From the Catalog -> Delta Sharing menu, in the "Shared with me" tab, you will see the share. To use the data, click on the share name, and then click "Create catalog" next to the dataset you would like to use. This will create a new catalog in your Databricks workspace with the shared data, and you can start using it immediately.
 

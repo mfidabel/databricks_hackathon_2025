@@ -87,3 +87,18 @@ Once you have been granted `USE PROVIDER` privileges, you can obtain your Delta 
 After we have received your Delta Sharing ID, we will share the data to your Databricks account. From the Catalog -> Delta Sharing menu, in the "Shared with me" tab, you will see the share. To use the data, click on the share name, and then click "Create catalog" next to the dataset you would like to use. This will create a new catalog in your Databricks workspace with the shared data, and you can start using it immediately.
 
 ![Create Catalog](./images/7_create_catalog.png)
+
+## 2. Getting Started with the Hackathon
+
+There are many different ways to approach this hackathon. We will provide a few different examples and links to resources that you can use to get started.
+
+While you are free to choose your own challenge/use case, we recommend pursuing one of the following if you are looking for inspiration. You can build both of these on data and resources provided by our Data for Good partners.
+
+- **Community Wellness & Support Navigator:** Create an agent system focused on improving individual and community well-being by making health and social support systems easier to navigate, from understanding benefits and health information to finding appropriate care pathways or resources. This could be combined with other data sources that might highlight community needs or real-time service availability, and with agents and tools to e.g. fill out forms or draft inquiries to agencies and resources. You might, for example, make an agent that helps with access to resources in a particular neighborhood or that analyzes gaps in resources and generates reports/communications for use by community advocates.
+- **Accessible City & Travel Equity Agent:** Create agents that promote inclusivity by helping individuals with particular accessibility needs discover and navigate cities and travel options. You might, for example, make an agent that finds/verifies accessible lodging/attractions and drafts inquiries or simulates booking steps or that plans detailed accessible routes and generates personalized itineraries based on the user's needs.
+
+### Demos and Examples
+
+- You will find some demo materials in your workspace. For example, the `Build your first AI Agent` notebook and `Bakehouse Sales Starter Space` Genie space both provide a great starting point for building your own agents in Databricks.
+- The [Agent Development](./agent_dev.ipynb) notebook provides a quick tour of some of the tools Databricks provides for building agents, such as MLflow tracing and Agent Evaluations.
+- For lower-code approaches, consider using [AI/BI Genie Spaces](https://docs.databricks.com/aws/en/genie) and [AI builder](https://docs.databricks.com/aws/en/generative-ai/ai-builder/) to build agents.

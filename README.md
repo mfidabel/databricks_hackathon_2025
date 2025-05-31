@@ -1,156 +1,104 @@
-# DAIS 2024 GenAI Workshop and Hackathon
+# DAIS 2025 GenAI Hackathon
 
-The repo contains a [sample notebook](vector_search_fm_api.ipynb) that demonstrates how to use [Databricks Mosaic AI Vector Search](https://docs.databricks.com/en/generative-ai/vector-search.html) to build a simple RAG application.
+## 1. Set Up Your Workspace and Get Data
 
-Below, we provide example code and UI steps showing how to accomplish the main steps of the notebook. For further details and a more complete implementation, see the [full notebook](vector_search_fm_api.ipynb).
+### Setting up your Workspace
 
-## Demo Components
+Use the provided link to get your Databricks trial account. This will be provided on the day of the hackathon.
 
-### 1. Setup
+After clicking the link, click "Continue with Express Setup."
 
-First, we install the necessary libraries and set up the catalog, schema, and table for the demo.
+![Express Setup](./images/8_express_setup.png)
 
-```python
-%pip install --upgrade --force-reinstall databricks-vectorsearch databricks-genai-inference
-dbutils.library.restartPython()
+Provide your email to create an account. We recommend using a work email address if possible. Then complete the rest of the prompts to set up your workspace.
 
-CATALOG = "workspace"
-DB='vs_demo'
-SOURCE_TABLE_NAME = "documents"
-SOURCE_TABLE_FULLNAME=f"{CATALOG}.{DB}.{SOURCE_TABLE_NAME}"
+For more details, see the [Databricks documentation](https://docs.databricks.com/aws/en/getting-started/express-setup).
+
+### Getting the Data
+
+Our *Data for Good* partners are providing several datasets for you to use in this hackathon. To access the data, you will need to configure your Databricks workspace to use Delta Sharing and then provide your Delta Sharing ID to the hackathon organizers. This involves two steps:
+
+1. Granting `USE PROVIDER` privileges on your Unity Catalog metastore.
+2. Obtaining your Delta Sharing ID and sharing it with the hackathon organizers.
+
+We will show two different approaches to accomplishing these steps. The first uses Databricks SQL and the second uses the Databricks UI. Use whichever approach you are comfortable with.
+
+#### Option 1: Using Databricks SQL (Recommended)
+
+1. **Click the "SQL Editor" tab in the left sidebar of your Databricks workspace.**
+
+Then click the "+" button to create a new query and select "Create new query."
+
+![SQL Editor](./images/9_sql.png)
+
+2. **Paste the following SQL code into the query editor:**
+
+```sql
+GRANT USE PROVIDER ON METASTORE TO `account users`;
+SELECT CURRENT_METASTORE();
 ```
 
-We then create a Delta table for the source data. This is the table that will be indexed for vector search.
+and then click the "Run" button (the arrow icon). In the results section, copy the `current_metastore()` value. It will look like `<cloud>:<region>:<uuid>` (e.g. `aws:us-west-2:19a84bee-54bc-43a2-87de-023d0ec16016`)
 
-```python
-from pyspark.sql.types import StructType, StructField, StringType, ArrayType, FloatType
-spark.sql(f"CREATE SCHEMA IF NOT EXISTS {CATALOG}.{DB}")
-spark.sql(
-    f"""CREATE TABLE IF NOT EXISTS {SOURCE_TABLE_FULLNAME} (
-        id STRING,
-        text STRING,
-        date DATE,
-        title STRING
-    )
-    USING delta 
-    TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true')
-"""
-)
-```
+![Run Query](./images/10_run_query.png)
 
-### 2. Configure the Vector Search Index
+Share this value with the hackathon organizers via the provided Google form. The organizers will then share the data to your Databricks account. You can find it in the Delta Sharing section of your workspace's Catalog Explorer. See the [Accessing the Data](#accessing-the-data) section for more details.
 
-We first initialize the vector search client as follows:
+#### Option 2: Using the Databricks UI
 
-```python
-from databricks.vector_search.client import VectorSearchClient
-vsc = VectorSearchClient()
-```
+To receive data via Delta Sharing, you will need `USE PROVIDER` privileges on your Unity Catalog metastore. To grant this, you can use the following approach:
 
-#### 2.1 Create the Vector Search endpoint
+1. **Navigate to the "Catalog" tab in the left sidebar of your Databricks workspace.**
 
-Next, we initialize the vector search endpoint. We can do this in Python or via the Databricks UI.
+![Navigate to Catalog](./images/1_catalog.png)
 
-##### Python
+2. **Click the gear symbol ("Manage") and select "Metastore" from the dropdown menu.**
 
-```python
-vsc.create_endpoint(VS_ENDPOINT_NAME)
-```
+![Navigate to Metastore](./images/2_metastore.png)
 
-##### UI
+3. **Click the "Permissions" tab and then click the "Grant" button.**
 
-To create a vector search endpoint, first navigate to the "compute" tab in the left navigation menu. Next, click the "Vector Search" tab. Click "create" and then name the endpoint.
+![Grant Permissions](./images/3_grant.png)
 
-![Create an endpoint using the Databricks UI](./images/create_endpoint_ui.png)
+4. **Check the box next to `USE PROVIDER` and select "All Account Users" from the "Principals" dropdown menu.**
 
-#### 2.2 Create the Vector Search Index
+![Use Provider](./images/4_use_provider.png)
 
-Next, we index the source Delta table we created earlier. We can do this in Python or via the Databricks UI.
+5. **Click "Grant" to set the privilege.**
 
-##### Python
+For more information, see the [Delta Sharing documentation on reading shared data](https://docs.databricks.com/aws/en/delta-sharing/read-data-databricks#permissions-required).
 
-```python
-i = vsc.create_delta_sync_index_and_wait(
-    endpoint_name=VS_ENDPOINT_NAME,
-    index_name=VS_INDEX_FULLNAME,
-    source_table_name=SOURCE_TABLE_FULLNAME,
-    pipeline_type="TRIGGERED",
-    primary_key="id",
-    embedding_source_column="text",
-    embedding_model_endpoint_name="databricks-bge-large-en"
-)
-```
+**Obtain and Share your Delta Sharing ID**
 
-For more details on what these specific arguments mean, see the documentation on [how to create and query a Vector Search index](https://docs.databricks.com/en/generative-ai/create-query-vector-search.html).
+Once you have been granted `USE PROVIDER` privileges, you can obtain your Delta Sharing ID by clicking the "Copy" button in the "Delta Sharing" section of the "Settings" tab. You will then provide this ID to the hackathon organizers via a google form that will be provided on the day of the hackathon.
 
-##### UI
+1. Navigate to the "Catalog" tab in the left sidebar of your Databricks workspace and then click the "Delta Sharing" button.
 
-To create the same kind of index using the UI, first navigate to the "catalog" tab in the left navigation menu. Navigate to the table you created earlier. From the "Create" dropdown, click "Vector search index."
+![Navigate to Delta Sharing](./images/5_delta_sharing.png)
 
-![Create an index using the Databricks UI](./images/create_index_ui_1.png)
+2. Click your Databricks sharing organization name in the upper right, and select Copy sharing identifier.
 
-Next, configure the index. The following screenshot shows how to configure the index in the same way as in the Python example above using the UI.
+![Copy Sharing Identifier](./images/6_copy_sharing_id.png)
 
-![Configure the index using the Databricks UI](./images/create_index_ui_2.png)
+3. Share your Delta Sharing ID with the hackathon organizers using the provided Google form.
 
-### 3. Add some data and sync the index
+### Accessing the Data
 
-Once we've create the index, we can add some data to the source Delta table we created at the beginning, and then sync it with the index. For an example of adding some sample data, see the [full notebook](vector_search_fm_api.ipynb).
+After we have received your Delta Sharing ID, we will share the data to your Databricks account. From the Catalog -> Delta Sharing menu, in the "Shared with me" tab, you will see the share. To use the data, click on the share name, and then click "Create catalog" next to the dataset you would like to use. This will create a new catalog in your Databricks workspace with the shared data, and you can start using it immediately.
 
-You can sync the index with the Python client or via the Databricks UI.
+![Create Catalog](./images/7_create_catalog.png)
 
-Sync the index in Python with:
+## 2. Getting Started with the Hackathon
 
-```python
-index = vsc.get_index(endpoint_name=VS_ENDPOINT_NAME,
-                      index_name=VS_INDEX_FULLNAME)
-index.sync()
-```
+There are many different ways to approach this hackathon. We will provide a few different examples and links to resources that you can use to get started.
 
-To sync the index using the UI, first navigate to the "catalog" tab in the left navigation menu. Navigate to the location you specified for the index. Select the index, and click "Sync now."
+While you are free to choose your own challenge/use case, we recommend pursuing one of the following if you are looking for inspiration. You can build both of these on data and resources provided by our Data for Good partners.
 
-![Sync the index using the Databricks UI](./images/sync_index_ui.png)
+- **Community Wellness & Support Navigator:** Create an agent system focused on improving individual and community well-being by making health and social support systems easier to navigate, from understanding benefits and health information to finding appropriate care pathways or resources. This could be combined with other data sources that might highlight community needs or real-time service availability, and with agents and tools to e.g. fill out forms or draft inquiries to agencies and resources. You might, for example, make an agent that helps with access to resources in a particular neighborhood or that analyzes gaps in resources and generates reports/communications for use by community advocates.
+- **Accessible City & Travel Equity Agent:** Create agents that promote inclusivity by helping individuals with particular accessibility needs discover and navigate cities and travel options. You might, for example, make an agent that finds/verifies accessible lodging/attractions and drafts inquiries or simulates booking steps or that plans detailed accessible routes and generates personalized itineraries based on the user's needs.
 
-### 4. Query the index
+### Demos and Examples
 
-You can query the index with the Python client with the `index.similarity_search()` method:
-
-```python
-index.similarity_search(columns=["text", "title"],
-                        query_text="What is the TDR Target for the SMARTER initiative?",
-                        num_results = 3)
-```
-
-You can also query the index directly or get `curl` or `python` code for querying the index via the UI. To do so, navigate to your index as in the previous step and click "Query endpoint".
-
-![Query the index from the Databricks UI](./images/query_index_ui.png)
-
-### 5. RAG: Bring in an LLM
-
-Lastly, we can pass the retrieved responses to an LLM to get informed answers about the retrieved content. Here's a very simple approach to this in Python:
-
-```python
-from databricks_genai_inference import ChatSession
-
-# reset history
-chat = ChatSession(model="databricks-meta-llama-3-70b-instruct",
-                   system_message="You are a helpful assistant. Answer the user's question based on the provided context.",
-                   max_tokens=128)
-
-# get context from vector search
-raw_context = index.similarity_search(columns=["text", "title"],
-                        query_text="What is the TDR Target for the SMARTER initiative?",
-                        num_results = 3)
-
-context_string = "Context:\n\n"
-
-for (i,doc) in enumerate(raw_context.get('result').get('data_array')):
-    context_string += f"Retrieved context {i+1}:\n"
-    context_string += doc[0]
-    context_string += "\n\n"
-
-chat.reply(f"User question: What is the TDR Target for the SMARTER initiative?\n\nContext: {context_string}")
-chat.last
-```
-
-Now you have the basic tools for making a simple RAG application with Databricks Mosaic AI Vector Search and the Foundation Model APIs! For a more detailed walkthrough, see the [full notebook](vector_search_fm_api.ipynb).
+- You will find some demo materials in your workspace. For example, the `Build your first AI Agent` notebook and `Bakehouse Sales Starter Space` Genie space both provide a great starting point for building your own agents in Databricks.
+- The [Agent Development](./agent_dev.ipynb) notebook provides a quick tour of some of the tools Databricks provides for building agents, such as MLflow tracing and Agent Evaluations.
+- For lower-code approaches, consider using [AI/BI Genie Spaces](https://docs.databricks.com/aws/en/genie) and [AI builder](https://docs.databricks.com/aws/en/generative-ai/ai-builder/) to build agents.

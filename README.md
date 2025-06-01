@@ -1,5 +1,12 @@
 # DAIS 2025 GenAI Hackathon
 
+This README provides a quick overview of how to get started with your Databricks workspace and how get get access to the data for the Data for Good challenges.
+
+Here are some links to additional guides and resources to help you get started:
+
+- [Agent Library Integrations](./databricks_agent_library_integrations.ipynb): This notebook provides a quick overview of how to integrate models from Databricks Model Serving with the popular LlamaIndex and LangGraph libraries, and addresses some common issues you may encounter.
+- [Agent Development with Databricks](./agent_dev.ipynb): This notebook shows some of the tools, such as Tracing and Agent Evaluations, that help you build agents on Databricks.
+
 ## 1. Set Up Your Workspace and Get Data
 
 ### Setting up your Workspace

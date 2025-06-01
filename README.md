@@ -107,5 +107,6 @@ While you are free to choose your own challenge/use case, we recommend pursuing 
 ### Demos and Examples
 
 - You will find some demo materials in your workspace. For example, the `Build your first AI Agent` notebook and `Bakehouse Sales Starter Space` Genie space both provide a great starting point for building your own agents in Databricks.
-- The [Agent Development](./agent_dev.ipynb) notebook provides a quick tour of some of the tools Databricks provides for building agents, such as MLflow tracing and Agent Evaluations.
+- The [Agent Library Integrations](2025_agent_hackathon_resources/databricks_agent_library_integrations.ipynb) notebook provides a quick overview of how to integrate models from Databricks Model Serving with the popular LlamaIndex and LangGraph libraries, and addresses some common issues you may encounter. Using one of these frameworks can save you a lot of time and effort.
+- The [Agent Development](2025_agent_hackathon_resources/agent_dev.ipynb) notebook provides a quick tour of some of the tools Databricks provides for building agents, such as MLflow tracing and Agent Evaluations.
 - For lower-code approaches, consider using [AI/BI Genie Spaces](https://docs.databricks.com/aws/en/genie) and [AI builder](https://docs.databricks.com/aws/en/generative-ai/ai-builder/) to build agents.

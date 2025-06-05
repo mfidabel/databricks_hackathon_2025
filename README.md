@@ -6,6 +6,7 @@ Here are some links to additional guides and resources to help you get started:
 
 - [Agent Library Integrations](2025_agent_hackathon_resources/databricks_agent_library_integrations.ipynb): This notebook provides a quick overview of how to integrate models from Databricks Model Serving with the popular LlamaIndex and LangGraph libraries, and addresses some common issues you may encounter.
 - [Agent Development with Databricks](2025_agent_hackathon_resources/agent_dev.ipynb): This notebook shows some of the tools, such as Tracing and Agent Evaluations, that help you build agents on Databricks.
+- [Getting Started with Nimble's MCP Server](2025_agent_hackathon_resources/Nimble-mcp.ipynb): This notebook shows how to build and run simple agents that can use the tools accessible via Nimble's remote MCP server using LangChain and LlamaIndex.
 
 ## 1. Set Up Your Workspace and Get Data
 
